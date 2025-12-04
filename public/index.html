@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>玉林香料 · 世界味道</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>玉林香料，世界味道</h1>
+    <p>扫描二维码参与猜灯谜，3 次机会，赢取香料礼包！</p>
+
+    <div id="quiz-area">
+      <p id="question"></p>
+      <input type="text" id="answer-input" placeholder="请输入你的答案" />
+      <button onclick="submitAnswer()">提交</button>
+    </div>
+
+    <div id="feedback" style="display:none;">
+      <p><strong>解析：</strong><span id="explanation"></span></p>
+      <p id="result-message"></p>
+      <button id="next-btn" style="display:none;" onclick="loadNewQuestion()">继续答题</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

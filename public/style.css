@@ -1,0 +1,55 @@
+body {
+  font-family: "Microsoft YaHei", sans-serif;
+  background: #f8f5f0;
+  color: #444;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+  color: #8B4513;
+  margin-bottom: 10px;
+}
+
+#quiz-area {
+  margin: 30px 0;
+}
+
+#answer-input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #8B4513;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover { background: #A0522D; }
+
+#feedback {
+  margin-top: 20px;
+  padding: 15px;
+  background: #FFFACD;
+  border-radius: 8px;
+  text-align: left;
+}

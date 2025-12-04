@@ -78,6 +78,7 @@ app.post('/api/submit', (req, res) => {
     return res.json({
       result: "failed",
       explanation: quiz.explanation,
+      correct_answer: quiz.answer,
       attempts_left: 0,
       message: "很遗憾，您的答题机会已用完，请明天再来。"
     });
@@ -86,6 +87,7 @@ app.post('/api/submit', (req, res) => {
   res.json({
     result: "wrong",
     explanation: quiz.explanation,
+    correct_answer: quiz.answer,
     attempts_left: attemptsLeft,
     message: `答案不正确，还剩 ${attemptsLeft} 次机会。`
   });

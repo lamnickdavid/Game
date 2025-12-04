@@ -10,6 +10,132 @@ const MAX_ATTEMPTS = 3;
 const quizzes = JSON.parse(fs.readFileSync(path.join(__dirname, 'quizzes.json'), 'utf-8'));
 const sessions = {}; // { userId: { attempts, answered, currentQuestionId } }
 
+// 同义词与模糊映射，便于宽松判定
+const synonymMap = {
+  '西红柿': '番茄',
+  '番茄': '番茄',
+  'tomato': '番茄',
+  '蕃茄': '番茄',
+  '马铃薯': '土豆',
+  '洋芋': '土豆',
+  'potato': '土豆',
+  '土豆': '土豆',
+  '蒜头': '大蒜',
+  '大蒜': '大蒜',
+  'garlic': '大蒜',
+  '生姜': '姜',
+  '老姜': '姜',
+  '姜': '姜',
+  'ginger': '姜',
+  'turmeric': '姜黄',
+  '姜黄': '姜黄',
+  '孜然粉': '孜然',
+  'cumin': '孜然',
+  '孜然': '孜然',
+  'lemongrass': '柠檬草',
+  '香茅': '柠檬草',
+  '香茅草': '柠檬草',
+  '柠檬草': '柠檬草',
+  '桂皮': '肉桂',
+  '肉桂': '肉桂',
+  'cinnamon': '肉桂',
+  '百里香': '百里香',
+  'thyme': '百里香',
+  '胡椒': '胡椒',
+  '黑胡椒': '胡椒',
+  '白胡椒': '胡椒',
+  'pepper': '胡椒',
+  '辣椒': '辣椒',
+  '尖椒': '辣椒',
+  '辣子': '辣椒',
+  'chili': '辣椒',
+  '鸡蛋': '鸡蛋',
+  '鸡子': '鸡蛋',
+  '鸡卵': '鸡蛋',
+  'egg': '鸡蛋',
+  '黄瓜': '黄瓜',
+  '青瓜': '黄瓜',
+  '胡瓜': '黄瓜',
+  'cucumber': '黄瓜',
+  '菠萝': '菠萝',
+  '凤梨': '菠萝',
+  'pineapple': '菠萝',
+  '猕猴桃': '猕猴桃',
+  '奇异果': '猕猴桃',
+  'kiwi': '猕猴桃',
+  '西瓜': '西瓜',
+  'watermelon': '西瓜',
+  '苹果': '苹果',
+  'apple': '苹果',
+  '甘蔗': '甘蔗',
+  '蔗': '甘蔗',
+  'sugarcane': '甘蔗',
+  '虾': '虾',
+  '虾仁': '虾',
+  'shrimp': '虾',
+  '汉堡': '汉堡',
+  '汉堡包': '汉堡',
+  'burger': '汉堡',
+  '油条': '油条',
+  '炸油条': '油条',
+  '爆米花': '爆米花',
+  '爆谷': '爆米花',
+  'popcorn': '爆米花',
+  '棉花糖': '棉花糖',
+  'marshmallow': '棉花糖',
+  '洋葱': '洋葱',
+  '葱头': '洋葱',
+  'onion': '洋葱',
+  '桔子': '橘子',
+  '橘子': '橘子',
+  'mandarin': '橘子',
+  '橄榄': '橄榄',
+  'olive': '橄榄',
+  '菊花': '菊花',
+  'chrysanthemum': '菊花',
+  '茉莉': '茉莉花',
+  '茉莉花': '茉莉花',
+  'jasmine': '茉莉花',
+  '茶': '茶叶',
+  '茶叶': '茶叶',
+  'tea': '茶叶',
+  '凉拌番茄': '凉拌西红柿',
+  '凉拌西红柿': '凉拌西红柿',
+  '凉拌蕃茄': '凉拌西红柿',
+  '带鱼': '带鱼',
+  'vanilla': '香草荚',
+  '香草豆荚': '香草荚',
+  '香草荚': '香草荚'
+};
+
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[·.\-_/—,，。！？!？:：;；'"“”‘’()（）【】[\]]/g, '');
+}
+
+function canonical(text) {
+  const norm = normalize(text || '');
+  return synonymMap[norm] || norm;
+}
+
+function parseAcceptableAnswers(raw) {
+  if (!raw) return [];
+  // 支持用 / | 、 ， 等分隔多答案
+  return raw
+    .split(/[\\/|,，、；;]+/)
+    .map(str => str.trim())
+    .filter(Boolean);
+}
+
+function isAnswerCorrect(quizAnswer, userAnswer) {
+  const candidates = parseAcceptableAnswers(quizAnswer);
+  if (candidates.length === 0) return false;
+  const userNorm = canonical(userAnswer);
+  return candidates.some(ans => canonical(ans) === userNorm);
+}
+
 app.use(express.static(STATIC_DIR));
 app.use(express.json());
 
@@ -58,7 +184,7 @@ app.post('/api/submit', (req, res) => {
     return res.status(400).json({ message: "无效请求" });
   }
 
-  const isCorrect = quiz.answer.trim().toLowerCase() === answer.trim().toLowerCase();
+  const isCorrect = isAnswerCorrect(quiz.answer, answer);
 
   if (isCorrect) {
     session.answered.push(question_id);

@@ -52,14 +52,14 @@ function submitAnswer() {
 function showFeedback(data) {
   const feedback = document.getElementById("feedback");
   const exp = document.getElementById("explanation");
+  const correctLine = document.getElementById("correct-line");
   const msg = document.getElementById("result-message");
   const nextBtn = document.getElementById("next-btn");
 
   const explanation = data.explanation || "无解析";
-  const correct = data.correct_answer ? `<div><strong>正确答案：</strong>${data.correct_answer}</div>` : "";
-  exp.innerHTML = correct
-    ? `${correct}<div><strong>解析：</strong>${explanation}</div>`
-    : `<div><strong>解析：</strong>${explanation}</div>`;
+  const correct = data.correct_answer ? `<strong>正确答案：</strong>${data.correct_answer}` : "";
+  correctLine.innerHTML = correct;
+  exp.innerHTML = `<strong>解析：</strong>${explanation}`;
   msg.innerHTML = `<strong>${data.message}</strong>`;
   feedback.style.display = "block";
 

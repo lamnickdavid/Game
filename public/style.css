@@ -136,6 +136,14 @@ button:active {
   color: var(--text);
 }
 
+#correct-line {
+  margin: 0 0 4px;
+}
+
+#explanation {
+  margin: 0 0 8px;
+}
+
 #result-message {
   margin: 6px 0 0;
   color: var(--text);

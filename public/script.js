@@ -64,10 +64,7 @@ function showFeedback(data) {
   }
 
   nextBtn.style.display = "none";
-  if (data.result === "correct") {
-    nextBtn.style.display = "inline";
-    nextBtn.textContent = "再来一题";
-  } else if (data.result === "wrong" && data.attempts_left > 0) {
+  if (data.result === "wrong" && data.attempts_left > 0) {
     nextBtn.style.display = "inline";
     nextBtn.textContent = "再试一次";
   }

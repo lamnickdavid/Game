@@ -210,6 +210,8 @@ app.post('/api/submit', (req, res) => {
     });
   }
 
+  // 每题仅能回答一次，答错后必须换题
+  session.currentQuestionId = null;
   res.json({
     result: "wrong",
     explanation: quiz.explanation,

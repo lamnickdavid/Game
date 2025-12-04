@@ -56,8 +56,10 @@ function showFeedback(data) {
   const nextBtn = document.getElementById("next-btn");
 
   const explanation = data.explanation || "无解析";
-  const correct = data.correct_answer ? `<strong>正确答案：</strong>${data.correct_answer}` : "";
-  exp.innerHTML = correct ? `${correct}<br><strong>解析：</strong>${explanation}` : `<strong>解析：</strong>${explanation}`;
+  const correct = data.correct_answer ? `<div><strong>正确答案：</strong>${data.correct_answer}</div>` : "";
+  exp.innerHTML = correct
+    ? `${correct}<div><strong>解析：</strong>${explanation}</div>`
+    : `<div><strong>解析：</strong>${explanation}</div>`;
   msg.innerHTML = `<strong>${data.message}</strong>`;
   feedback.style.display = "block";
 

@@ -4,6 +4,7 @@ let userId = 'u_' + Date.now() + Math.random().toString(36).substr(2, 5);
 window.onload = () => loadNewQuestion();
 
 function loadNewQuestion() {
+  setInteraction(true);
   fetch('/api/start', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -28,6 +29,7 @@ function submitAnswer() {
   const answer = document.getElementById("answer-input").value.trim();
   if (!currentQuestionId) return alert("请先获取题目");
   if (!answer) return alert("请输入答案");
+  setInteraction(false);
 
   fetch('/api/submit', {
     method: 'POST',
@@ -67,6 +69,9 @@ function showFeedback(data) {
     currentQuestionId = null;
   }
 
+  // 每题仅能回答一次，提交后禁用输入
+  setInteraction(false);
+
   nextBtn.style.display = "none";
   if (data.result === "wrong" && data.attempts_left > 0) {
     nextBtn.style.display = "inline";
@@ -76,4 +81,11 @@ function showFeedback(data) {
 
 function hideFeedback() {
   document.getElementById("feedback").style.display = "none";
+}
+
+function setInteraction(enabled) {
+  const input = document.getElementById("answer-input");
+  const submitBtn = document.querySelector("#quiz-area button");
+  input.disabled = !enabled;
+  submitBtn.disabled = !enabled;
 }

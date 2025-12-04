@@ -55,7 +55,9 @@ function showFeedback(data) {
   const msg = document.getElementById("result-message");
   const nextBtn = document.getElementById("next-btn");
 
-  exp.textContent = data.explanation || "无解析";
+  const explanation = data.explanation || "无解析";
+  const correct = data.correct_answer ? `正确答案：${data.correct_answer}` : "";
+  exp.innerHTML = correct ? `${explanation}<br>${correct}` : explanation;
   msg.innerHTML = `<strong>${data.message}</strong>`;
   feedback.style.display = "block";
 
